@@ -35,17 +35,19 @@ class Serializer(base.Serializer):
                                  freezer_caps=json.JSON_FREEZER_CAPS)
         self._force_unicode = force_unicode
 
-    ### Overridden Methods ###
+    def flatten_passthrough(self, value, caps, freezing):
+        return value
 
-    def flatten_unknown_value(self, value, caps, freezing):
-        if isinstance(
-            value, (
-                datetime.datetime, bson.regex.Regex,
-                bson.binary.Binary, bson.ObjectId,
-                bson.dbref.DBRef, bson.code.Code)):
-            return value
-        return super(Serializer, self).flatten_unknown_value(
-            value, caps, freezing)
+    ### lookup tables ###
+
+    _value_lookup = dict(base.Serializer._value_lookup)
+
+    for passthrough_type in (datetime.datetime, bson.regex.Regex,
+                             bson.binary.Binary, bson.ObjectId,
+                             bson.dbref.DBRef, bson.code.Code):
+        _value_lookup[passthrough_type] = flatten_passthrough
+
+    ### Overridden Methods ###
 
     def flatten_key(self, key, caps, freezing):
         if not isinstance(key, str):
