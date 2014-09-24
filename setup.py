@@ -39,8 +39,8 @@ NAME = 'featmongo'
 DESCRIPTION = ('Wrapper around pymongo using the serialization '
                'module of feat to convert BSON to python object ')
 LONG_DESC = DESCRIPTION
-AUTHOR = 'Pragmatic Coders Developers',
-AUTHOR_EMAIL = 'dev@pragmaticcoders.com',
+AUTHOR = 'Pragmatic Coders Developers'
+AUTHOR_EMAIL = 'dev@pragmaticcoders.com'
 LICENSE = "Proprietary"
 PLATFORMS = ['any']
 REQUIRES = []
