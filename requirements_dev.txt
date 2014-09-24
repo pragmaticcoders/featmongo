@@ -1,1 +1,5 @@
+feat==0.29.9
+pytest
+pytest-cache
+pytest-capturelog
 pytest-dbfixtures

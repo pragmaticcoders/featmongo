@@ -44,7 +44,7 @@ AUTHOR_EMAIL = 'dev@pragmaticcoders.com',
 LICENSE = "Proprietary"
 PLATFORMS = ['any']
 REQUIRES = []
-SETUP_REQUIRES = ['setuptools>=0.6c9']
+SETUP_REQUIRES = ['setuptools>=0.6c9', 'wheel==0.23.0']
 INSTALL_REQUIRES = read_requirements('requirements.txt')
 TESTS_REQUIRE = read_requirements('requirements_dev.txt')
 DEPENDENCY_LINKS = []
@@ -70,10 +70,6 @@ class PyTest(TestCommand):
         self.test_args = [
             'tests',
             'featmongo',
-            '--pep8',
-            '--flakes',
-            '--cov', 'featmongo',
-            '--cov-report', 'term-missing',
         ]
         self.test_suite = True
 
