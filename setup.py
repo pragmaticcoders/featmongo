@@ -61,6 +61,10 @@ CLASSIFIERS = [
     ]
 
 
+PACKAGES = [
+    'featmongo',
+]
+
 class PyTest(TestCommand):
 
     """Command to run unit tests after in-place build."""
@@ -81,7 +85,7 @@ class PyTest(TestCommand):
 
 
 setup(name = NAME,
-      version = '0.1.0',
+      version = '0.1.1',
       description = DESCRIPTION,
       long_description = LONG_DESC,
       # url='',
@@ -94,7 +98,7 @@ setup(name = NAME,
       tests_require=TESTS_REQUIRE,
       dependency_links=DEPENDENCY_LINKS,
       requires = REQUIRES,
-      packages = ['featmongo'],
+      packages = PACKAGES,
       include_package_data = True,
       keywords = KEYWORDS,
       classifiers = CLASSIFIERS,
