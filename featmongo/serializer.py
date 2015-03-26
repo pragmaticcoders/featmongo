@@ -52,7 +52,7 @@ class Serializer(base.Serializer):
     def flatten_key(self, key, caps, freezing):
         if not isinstance(key, str):
             if isinstance(key, unicode) and self._force_unicode:
-                pass
+                return key
             else:
                 raise TypeError("Serializer %s is not capable of serializing "
                                 "non-string dictionary keys: %r"
