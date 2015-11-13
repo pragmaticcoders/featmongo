@@ -1,5 +1,6 @@
 import bson
 import datetime
+import threading
 
 from feat.common import reflect
 from feat.common.serialization import base, json
@@ -237,11 +238,21 @@ class Unserializer(base.Unserializer):
 class Transform(SONManipulator):
 
     def __init__(self, registry=None):
-        self._serializer = Serializer()
-        self._unserializer = Unserializer(registry=registry)
+        self._tls = threading.local()
+        self._registry = registry
 
     def transform_incoming(self, son, collection):
-        return self._serializer.convert(son)
+        return self._get_serializer().convert(son)
 
     def transform_outgoing(self, son, collection):
-        return self._unserializer.convert(son)
+        return self._get_unserializer().convert(son)
+
+    def _get_serializer(self):
+        if not hasattr(self._tls, 'serializer'):
+            self._tls.serializer = Serializer()
+        return self._tls.serializer
+
+    def _get_unserializer(self):
+        if not hasattr(self._tls, 'unserializer'):
+            self._tls.unserializer = Unserializer(registry=self._registry)
+        return self._tls.unserializer
