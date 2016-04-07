@@ -22,6 +22,8 @@ FUNCTION_ATOM = u"_function"
 INSTANCE_TYPE_ATOM = u"_type"
 INSTANCE_STATE_ATOM = u"_state"
 
+VERSION_ATOM = '_version'
+
 DEFAULT_ENCODING = "UTF8"
 ALLOWED_CODECS = set(["UTF8", "UTF-8", "utf8"])
 
@@ -140,6 +142,12 @@ class Unserializer(base.Unserializer):
                                    converter_caps=json.JSON_CONVERTER_CAPS,
                                    registry=registry,
                                    )
+
+    def get_target_ver(self, restorator, snapshot):
+        return getattr(restorator, 'version', None)
+
+    def get_source_ver(self, restorator, snapshot):
+        return snapshot.get(VERSION_ATOM, 1)
 
     ### Overridden Methods ###
 
