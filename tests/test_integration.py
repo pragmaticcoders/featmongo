@@ -16,6 +16,26 @@ class TestDoc(document.Document):
     document.field('created_at', None)
 
 
+class TestVersionedDoc(document.VersionedDocument):
+
+    type_name = "versioned-test-doc"
+
+    version = 2
+
+    document.field('foo', None)
+    document.field('bar', 'default bar')
+
+    @staticmethod
+    def upgrade_to_2(snapshot):
+        snapshot['foo'] = 'migrated foo'
+        return snapshot
+
+    @staticmethod
+    def downgrade_to_2(snapshot):
+        snapshot['foo'] = 'downgraded foo'
+        return snapshot
+
+
 class SomeObject(formatable.Formatable):
 
     formatable.field('field', None)
@@ -29,6 +49,7 @@ def registry(request):
     request.addfinalizer(lambda: registry.reset(snapshot))
 
     registry.register(TestDoc)
+    registry.register(TestVersionedDoc)
     registry.register(SomeObject)
 
     return registry
@@ -71,6 +92,7 @@ def test_update_with_complex_object(db):
             created_at=datetime.datetime.now(),
             ),
         ])
+
     r = db.tests.update({'_id': bson.ObjectId(doc_id)},
                    {'$set': {'bar': SomeObject(field='value'),
                              'foo': 'foo'}},
@@ -83,3 +105,44 @@ def test_update_with_complex_object(db):
     assert fetched.bar.field == 'value'
     assert isinstance(fetched.created_at, datetime.datetime)
     assert isinstance(fetched._id, bson.ObjectId)
+
+
+def test_create_versioned_document(db):
+    ids = db.tests.insert([
+        TestVersionedDoc(foo='hello')
+    ])
+    assert db.tests.find_one({'foo': 'hello'})._id == ids[0]
+
+
+def test_fetch_old_document(db):
+    old_document = {
+        'foo': 'hello',
+        '_version': 1,
+        '_type': 'versioned-test-doc',
+    }
+    ids = db.tests.insert([old_document])
+    obj = db.tests.find_one(ids[0])
+    assert obj.version == TestVersionedDoc.version
+    assert obj.bar == 'default bar'
+
+
+def test_upgrade_to_new_version(db):
+    old_document = {
+        'foo': 'hello',
+        '_version': 1,
+        '_type': 'versioned-test-doc',
+    }
+    ids = db.tests.insert([old_document])
+    obj = db.tests.find_one(ids[0])
+    assert obj.foo == 'migrated foo'
+
+
+def test_downgrade_to_old_version(db):
+    newer_document = {
+        'foo': 'hello',
+        '_version': 3,
+        '_type': 'versioned-test-doc',
+    }
+    ids = db.tests.insert([newer_document])
+    obj = db.tests.find_one(ids[0])
+    assert obj.foo == 'downgraded foo'
