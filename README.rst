@@ -30,3 +30,12 @@ Usage
     #> [ObjectId('5416df0728fcb236317dff7d')]
     print db.tests.find_one({'foo': 'bar'})
     #> <TestDoc {'_id': ObjectId('5416df0728fcb236317dff7d'), 'foo': u'bar'}>
+
+
+Changes
+-------
+
+Version 0.2.0
+=============
+
+* Add support for handling different versions of documents loaded from mongo.
