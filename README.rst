@@ -1,9 +1,19 @@
+Featmongo
+---------
+
+.. image:: https://img.shields.io/travis/kowalski/featmongo.svg
+        :target: https://travis-ci.org/kowalski/featmongo
+
+.. image:: https://img.shields.io/pypi/v/featmongo.svg
+        :target: https://pypi.python.org/pypi/featmongo
+
+
 This is a wrapper allowing the usage of `feat` (https://github.com/f3at/feat.git)
 serialization layer with `pymongo`.
 
 
 Usage
------
+=====
 
 ::
 
@@ -33,8 +43,9 @@ Usage
 
 
 Changes
--------
+=======
 
+=============
 Version 0.2.0
 =============
 
