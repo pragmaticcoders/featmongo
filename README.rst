@@ -8,8 +8,7 @@ Featmongo
         :target: https://pypi.python.org/pypi/featmongo
 
 
-This is a wrapper allowing the usage of `feat` (https://github.com/f3at/feat.git)
-serialization layer with `pymongo`.
+This is a wrapper allowing the usage of `serialization` (https://github.com/pragmaticcoders/serialization) with `pymongo`.
 
 
 Usage
@@ -18,7 +17,7 @@ Usage
 ::
 
     from bson.objectid import ObjectId
-    from feat.common import serialization
+    import serialization
     from featmongo import serializer, document
     from pymongo import MongoClient
 
@@ -44,6 +43,12 @@ Usage
 
 Changes
 =======
+
+=============
+Version 0.3.0
+=============
+
+* Python 3 support. Drop support from `feat`. Use `serialization` instead.
 
 =============
 Version 0.2.0

@@ -2,8 +2,11 @@ import bson
 import datetime
 import threading
 
-from feat.common import reflect
-from feat.common.serialization import base, json
+from six import iteritems
+from past.types import unicode, long
+from future.utils import PY3
+from serialization import reflect
+from serialization import base, json_ as json
 
 from pymongo.son_manipulator import SONManipulator
 
@@ -53,7 +56,7 @@ class Serializer(base.Serializer):
     ### Overridden Methods ###
 
     def flatten_key(self, key, caps, freezing):
-        if not isinstance(key, str):
+        if not isinstance(key, bytes):
             if isinstance(key, unicode) and self._force_unicode:
                 return key
             else:
@@ -82,7 +85,6 @@ class Serializer(base.Serializer):
         return [SET_ATOM] + data
 
     def pack_enum(self, data):
-
         return [ENUM_ATOM, reflect.canonical_name(data) + "." + data.name]
 
     def pack_type(self, data):
@@ -130,7 +132,7 @@ class Serializer(base.Serializer):
 
 class Unserializer(base.Unserializer):
 
-    pass_through_types = set([str, unicode, int, long,
+    pass_through_types = set([bytes, unicode, int, long,
                               float, bool, type(None),
                               datetime.datetime, bson.regex.Regex,
                               bson.binary.Binary, bson.ObjectId,
@@ -196,10 +198,10 @@ class Unserializer(base.Unserializer):
 
     def unpack_enum(self, data):
         _, full_name = data
-        parts = full_name.encode(DEFAULT_ENCODING).split('.')
+        parts = full_name.split('.')
         type_name = ".".join(parts[:-1])
         enum = self.restore_type(type_name)
-        return enum.get(parts[-1])
+        return enum[parts[-1]]
 
     def unpack_type(self, data):
         _, type_name = data
@@ -225,7 +227,10 @@ class Unserializer(base.Unserializer):
         container.update(self.unpack_unordered_values(data[1:]))
 
     def unpack_dict(self, container, data):
-        items = [(k.encode(DEFAULT_ENCODING), v)for k, v in data.iteritems()]
+        if PY3:
+            items = data.items()
+        else:
+            items = [(k.encode(DEFAULT_ENCODING), v)for k, v in data.items()]
         container.update(self.unpack_unordered_pairs(items))
 
     def unpack_function(self, data):

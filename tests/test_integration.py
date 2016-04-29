@@ -2,7 +2,8 @@ import bson
 import datetime
 import pytest
 
-from feat.common import serialization, formatable
+import serialization
+from serialization import formatable
 
 from featmongo import serializer, document
 
@@ -14,6 +15,9 @@ class TestDoc(document.Document):
     document.field('foo', None)
     document.field('bar', None)
     document.field('created_at', None)
+
+    def recover(self, snapshot):
+        super(TestDoc, self).recover(snapshot)
 
 
 class TestVersionedDoc(document.VersionedDocument):
@@ -51,8 +55,15 @@ def registry(request):
     registry.register(TestDoc)
     registry.register(TestVersionedDoc)
     registry.register(SomeObject)
+    print(SomeObject.type_name)
 
     return registry
+
+
+class TestVersionedDocument(object):
+
+    def test_provides_version_adapter(self):
+        assert serialization.IVersionAdapter.providedBy(TestVersionedDoc)
 
 
 @pytest.fixture

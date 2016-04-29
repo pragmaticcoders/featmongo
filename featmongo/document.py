@@ -1,5 +1,8 @@
-from feat.common import formatable, serialization
-from serializer import VERSION_ATOM
+import serialization
+from serialization import formatable
+from six import with_metaclass
+
+from .serializer import VERSION_ATOM
 
 
 field = formatable.field
@@ -10,9 +13,10 @@ class MetaVersionedFormatable(
     pass
 
 
-class VersionedFormatable(formatable.Formatable, serialization.VersionAdapter):
-
-    __metaclass__ = MetaVersionedFormatable
+class VersionedFormatable(
+        with_metaclass(
+            MetaVersionedFormatable,
+            formatable.Formatable, serialization.VersionAdapter)):
 
     version = 1
 

@@ -20,24 +20,11 @@ def read_requirements(filename):
     return contents.split('\n') if contents else []
 
 
-def extract_dependencies(requirements):
-    '''
-    Transform any links understood by pip for the format
-    accepted by setuptools.
-    '''
-    result = list()
-    matcher = re.compile('https?://.+#egg=([^-]+)-(.+)')
-    for index, part in enumerate(list(requirements)):
-        match = matcher.search(part)
-        if match:
-            result.append(part)
-            requirements[index] = '%s==%s' % (match.group(1), match.group(2))
-    return result
-
 
 NAME = 'featmongo'
-DESCRIPTION = ('Wrapper around pymongo using the serialization '
-               'module of feat to convert BSON to python object ')
+DESCRIPTION = (
+    'Wrapper around pymongo using the serialization '
+    'module to convert BSON to python object ')
 LONG_DESC = DESCRIPTION
 AUTHOR = 'Pragmatic Coders Developers'
 AUTHOR_EMAIL = 'dev@pragmaticcoders.com'
@@ -47,9 +34,6 @@ REQUIRES = []
 SETUP_REQUIRES = ['setuptools>=0.6c9', 'wheel==0.23.0']
 INSTALL_REQUIRES = read_requirements('requirements.txt')
 TESTS_REQUIRE = read_requirements('requirements_dev.txt')
-DEPENDENCY_LINKS = []
-DEPENDENCY_LINKS.extend(extract_dependencies(INSTALL_REQUIRES))
-DEPENDENCY_LINKS.extend(extract_dependencies(TESTS_REQUIRE))
 
 KEYWORDS = []
 CLASSIFIERS = [
@@ -58,7 +42,9 @@ CLASSIFIERS = [
     'Natural Language :: English',
     'Operating System :: POSIX :: Linux',
     'Programming Language :: Python :: 2.6',
-    ]
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3.4',
+]
 
 
 PACKAGES = [
@@ -85,10 +71,9 @@ class PyTest(TestCommand):
 
 
 setup(name = NAME,
-      version = '0.2.1',
+      version = '0.3.0',
       description = DESCRIPTION,
       long_description = LONG_DESC,
-      # url='',
       author = AUTHOR,
       author_email = AUTHOR_EMAIL,
       license = LICENSE,
@@ -96,7 +81,6 @@ setup(name = NAME,
       setup_requires = SETUP_REQUIRES,
       install_requires = INSTALL_REQUIRES,
       tests_require=TESTS_REQUIRE,
-      dependency_links=DEPENDENCY_LINKS,
       requires = REQUIRES,
       packages = PACKAGES,
       include_package_data = True,

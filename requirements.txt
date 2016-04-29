@@ -1,2 +1,4 @@
-feat>=1.0.3
+serialization>=1.1.0
 pymongo
+six
+future
