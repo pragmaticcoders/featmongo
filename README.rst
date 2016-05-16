@@ -45,6 +45,12 @@ Changes
 =======
 
 =============
+Version 0.3.1
+=============
+
+* Adapt to `serialization` version 1.2.0.
+
+=============
 Version 0.3.0
 =============
 
