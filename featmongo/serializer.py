@@ -36,13 +36,22 @@ class Serializer(base.Serializer):
     pack_dict = dict
 
     def __init__(self, force_unicode=True):
-        base.Serializer.__init__(self,
-                                 converter_caps=json.JSON_CONVERTER_CAPS,
-                                 freezer_caps=json.JSON_FREEZER_CAPS)
+        base.Serializer.__init__(
+            self,
+            converter_caps=json.JSON_CONVERTER_CAPS,
+            freezer_caps=json.JSON_FREEZER_CAPS,
+            version_atom=VERSION_ATOM,
+        )
         self._force_unicode = force_unicode
 
     def flatten_passthrough(self, value, caps, freezing):
         return value
+
+    def get_target_ver(self, instance, snapshot):
+        return getattr(instance, 'version', None)
+
+    def get_source_ver(self, instance, snapshot):
+        return getattr(instance, 'version', None)
 
     ### lookup tables ###
 

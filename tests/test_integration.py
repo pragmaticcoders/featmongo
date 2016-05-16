@@ -123,6 +123,14 @@ def test_create_versioned_document(db):
         TestVersionedDoc(foo='hello')
     ])
     assert db.tests.find_one({'foo': 'hello'})._id == ids[0]
+    raw = db.tests.find_one({'foo': 'hello'}, manipulate=False)
+    assert raw == {
+        '_type': TestVersionedDoc.type_name,
+        '_version': TestVersionedDoc.version,
+        '_id': ids[0],
+        'foo': 'hello',
+        'bar': 'default bar',
+    }
 
 
 def test_fetch_old_document(db):
