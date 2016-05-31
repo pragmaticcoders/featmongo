@@ -11,6 +11,12 @@ from serialization import base, json_ as json
 from pymongo.son_manipulator import SONManipulator
 
 
+try:
+    from bson.int64 import Int64
+except ImportError:
+    Int64 = long
+
+
 TUPLE_ATOM = u"_tuple"
 BYTES_ATOM = u"_bytes"
 BYTES_ENCODING = "BASE64"
@@ -59,7 +65,7 @@ class Serializer(base.Serializer):
 
     for passthrough_type in (datetime.datetime, bson.regex.Regex,
                              bson.binary.Binary, bson.ObjectId,
-                             bson.dbref.DBRef, bson.code.Code):
+                             bson.dbref.DBRef, bson.code.Code, Int64):
         _value_lookup[passthrough_type] = flatten_passthrough
 
     ### Overridden Methods ###

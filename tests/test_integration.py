@@ -165,3 +165,14 @@ def test_downgrade_to_old_version(db):
     ids = db.tests.insert([newer_document])
     obj = db.tests.find_one(ids[0])
     assert obj.foo == 'downgraded foo'
+
+
+def test_insert_int64(db):
+    try:
+        from bson.int64 import Int64
+    except ImportError:
+        pytest.skip('pymongo<3 does not define Int64 class')
+
+    doc = TestDoc(foo=Int64(2 ** 60))
+
+    db.tests.insert([doc])
