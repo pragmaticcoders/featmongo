@@ -45,6 +45,13 @@ Changes
 =======
 
 =============
+Version 0.3.3
+=============
+
+* Fix serialization of `bson.int64.Int64` class (compatibility issue
+  with pymongo 3.x).
+
+=============
 Version 0.3.1
 =============
 

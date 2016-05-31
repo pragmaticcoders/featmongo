@@ -71,7 +71,7 @@ class PyTest(TestCommand):
 
 
 setup(name = NAME,
-      version = '0.3.2',
+      version = '0.3.3',
       description = DESCRIPTION,
       long_description = LONG_DESC,
       author = AUTHOR,
